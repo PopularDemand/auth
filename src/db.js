@@ -8,26 +8,31 @@ pool.on('error', (err, client) => {
 });
 
 const makeQuery = function(text, values, cb) {
-  console.log('query: ', text, values);
   return pool.query(text, values, cb);
 };
 
 const createUser = function(fields, values, cb) {
-  const text = `INSERT INTO users(${fields.join(', ')}) VALUES($1, $2) RETURNING *`;
+  let count = 1;
+  const valuesStr = '$' + values.map(() => count++).join(', $');
+  const text = `INSERT INTO users(${fields.join(', ')}) VALUES(${valuesStr}) RETURNING *`;
   
   return makeQuery(text, values, cb)
     .catch((e) => console.error(e));
 };
 
-// const text = 'INSERT INTO users(username, password) VALUES($1, $2) RETURNING *';
-// const values = ['username', 'pass'];
+const findUser = function(params, cb) {
+  // TODO: can make params be multi keyed
+  const columns = Object.keys(params);
+  const values = columns.map((col) => params[col]).slice(0, 1);
 
-// makeQuery(text, values)
-//   .then((res) => console.log(res))
-//   .catch((e) => console.error(e));
+  const text = `SELECT * from users WHERE ${columns[0]} = $1 LIMIT 1`;
+
+  return makeQuery(text, values, cb); // TODO: standardize where errors caught
+};
 
 module.exports = {
-  makeQuery,
   createUser,
+  findUser,
+  makeQuery,
   pool
 }
