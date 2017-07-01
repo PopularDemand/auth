@@ -49,4 +49,15 @@ app.post('/login', (req, res) => {
     });
 });
 
+app.post('/user/delete', (req, res) => {
+  const userParams = req.body;
+  db.deleteUser(userParams.id)
+    .then((data) => {
+      return res.send(data.rows[0]);
+    })
+    .catch((e) => {
+      res.send(e.message);
+    })
+});
+
 app.listen(3000);

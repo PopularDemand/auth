@@ -12,6 +12,8 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "lodash": "^4.17.4",
+    "pbkdf2-password": "^1.2.1",
     "pg": "^6.4.0"
   }
 }

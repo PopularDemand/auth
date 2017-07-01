@@ -11,10 +11,9 @@ const makeQuery = function(text, values, cb) {
   return pool.query(text, values, cb);
 };
 
-const createUser = function(fields, values, cb) {
-  let count = 1;
-  const valuesStr = '$' + values.map(() => count++).join(', $');
-  const text = `INSERT INTO users(${fields.join(', ')}) VALUES(${valuesStr}) RETURNING *`;
+const createUser = function(columns, values, cb) {
+  const valueStr = _build$Str(values.length);
+  const text = `INSERT INTO users(${columns.join(', ')}) VALUES(${valuesStr}) RETURNING *`;
   
   return makeQuery(text, values, cb)
     .catch((e) => console.error(e));
@@ -30,9 +29,27 @@ const findUser = function(params, cb) {
   return makeQuery(text, values, cb); // TODO: standardize where errors caught
 };
 
+const deleteUser = function(params, cb) {
+  const text = `DELETE from users WHERE id = ${id} RETURNING *`;
+
+  return makeQuery(text, [params.id], cb);
+};
+
+_parseParams = (params) => {
+  const columns = Object.keys(params);
+  const values = columns.map((col) => params[col]);
+
+  return [columns, values];
+};
+
+_build$Str = (num) {
+  return '$' + range(1, num+1).join(', $');
+}
+
 module.exports = {
   createUser,
   findUser,
+  deleteUser,
   makeQuery,
   pool
 }
