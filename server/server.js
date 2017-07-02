@@ -10,76 +10,18 @@ const hasher = bkfd2Password();
 const PORT = process.env.PORT || 3000;
 const knex = require('../db/knex');
 
+const usersRoutes = require('./routes/users');
+const levelsRoutes = require('./routes/levels');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.get('/users', (req, res) => {
-  knex.select().from('users')
-    .then((users) => {
-      res.send(users);
-    });
-});
-
-app.get('/users/:id', (req, res) => {
-  knex.select().from('users').where('id', req.params.id)
-    .then((user) => {
-      res.send(user);
-    });
-});
-
-app.get('/users/:id/level', (req, res) => {
-  knex
-    .select('users.*', 'levels.name as level_name')
-    .from('users')
-    .innerJoin('levels', 'users.level_id', 'levels.id')
-    .where('users.id', req.params.id)
-    .then((data) => {
-      res.send(data);
-    });
-})
-
-app.get('/levels', (req, res) => {
-  knex.select().from('levels')
-    .then((levels) => {
-      res.send(levels);
-    });
-});
-
-app.post('/levels', (req, res) => {
-  knex('levels')
-    .insert(req.body.level)
-    .returning(['id', 'name'])
-    .then((level) => {
-      res.send(level);
-    });
-});
-
-app.put('/levels/:id', (req, res) => {
-  const levelParams = _.merge({}, req.body.level, {updated_at: moment()});
-  knex('levels')
-    .where('id', req.params.id)
-    .update(levelParams)
-    .returning(['id', 'name'])
-    .then((level) => {
-      res.send(level);
-    });
-});
-
-app.delete('/levels/:id', (req, res) => {
-  knex('levels')
-    .where('id', req.params.id)
-    .del()
-    .returning(['id', 'name'])
-    .then((level) => {
-      res.send(level);
-    });
-});
+app.use('/users', usersRoutes);
+app.use('/levels', levelsRoutes);
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
-
-// knex.raw('select * from users')
 
 // app.post('/registration', (req, res) => {
 //   const user = _.merge({}, req.body);
