@@ -2,15 +2,25 @@ const router = require('express').Router();
 const knex = require('../../db/knex');
 const moment = require('moment');
 
+const LevelsController = require('../controllers/LevelsController');
+const controller = new LevelsController();
+
 router.use((req, res, next) => {
   console.log(`Levels: ${moment()}`);
   next();
 });
 
 router.get('/', (req, res) => {
-  knex.select().from('levels')
+  controller.index()
     .then((levels) => {
       res.send(levels);
+    });
+});
+
+router.get('/:id', (req, res) => {
+  controller.show(req.params.id)
+    .then((level) => {
+      res.send(level);
     });
 });
 
