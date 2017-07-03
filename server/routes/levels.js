@@ -25,9 +25,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  knex('levels')
-    .insert(req.body.level)
-    .returning(['id', 'name'])
+  controller.create(req.body)
     .then((level) => {
       res.send(level);
     });

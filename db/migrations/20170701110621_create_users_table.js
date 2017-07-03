@@ -1,12 +1,12 @@
 
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('levels', (table) => {
-    table.increments();
+    table.increments('id').primary();
     table.string('name').notNullable().defaultTo('initiate');
     table.timestamps();
   })
   .createTable('users', (table) => {
-    table.increments();
+    table.increments('id').primary();
     table.string('nickname').notNullable();
     table.string('email').notNullable();
     table.string('encrypted_password').notNullable();

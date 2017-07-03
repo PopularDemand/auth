@@ -12,11 +12,12 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "bookshelf": "^0.10.3",
     "express": "^4.15.3",
-    "lodash": "^4.17.4",
-    "pbkdf2-password": "^1.2.1",
     "knex": "^0.13.0",
+    "lodash": "^4.17.4",
     "moment": "^2.18.1",
+    "pbkdf2-password": "^1.2.1",
     "pg": "^6.4.0"
   }
 }
