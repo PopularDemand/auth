@@ -9,18 +9,18 @@ class BaseController {
     this.badInitialization = !(table && model);
   }
 
+  beforeEach() {
+    this._checkInitialization();
+  }
+
   index() {
-    if (this.badInitialization) {
-      throw new Error(`improper initialization: ${this.table}, ${this.model}`);
-    }
+    this.beforeEach();
 
     return this.model.fetchAll();
   }
 
   show(id) {
-    if (this.badInitialization) {
-      throw new Error(`improper initialization: ${this.table}, ${this.model}`);
-    }
+    this.beforeEach();
 
     return this.model
       .forge({id: id})
@@ -29,10 +29,7 @@ class BaseController {
   }
 
   create(params) {
-    // knex insert
-    if (this.badInitialization) {
-      throw new Error(`improper initialization: ${this.table}, ${this.model}`);
-    }
+    this.beforeEach();
 
     return this.model
       .forge(params)
@@ -41,11 +38,21 @@ class BaseController {
   }
 
   update(params) {
-    // knex update
+    this.beforeEach();
+    
+    return new this.model(params)
+      .save(params, {patch: true})
+      .then((resource) => resource);
   }
 
   delete(id) {
     // knex delete
+  }
+
+  _checkInitialization() {
+    if (this.badInitialization) {
+      throw new Error(`improper initialization: ${this.table}, ${this.model}`);
+    }
   }
 }
 

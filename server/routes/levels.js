@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const knex = require('../../db/knex');
 const moment = require('moment');
+const merge = require('lodash/merge');
 
 const LevelsController = require('../controllers/LevelsController');
 const controller = new LevelsController();
@@ -25,18 +26,25 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  controller.create(req.body)
+  const levelParams = merge(
+    {created_at: moment()},
+    req.body
+  );
+
+  controller.create(levelParams)
     .then((level) => {
       res.send(level);
     });
 });
 
 router.put('/:id', (req, res) => {
-  const levelParams = _.merge({}, req.body.level, {updated_at: moment()});
-  knex('levels')
-    .where('id', req.params.id)
-    .update(levelParams)
-    .returning(['id', 'name'])
+  const levelParams = merge(
+    {id: req.params.id},
+    req.body,
+    {updated_at: moment()}
+  );
+  
+  controller.update(levelParams)
     .then((level) => {
       res.send(level);
     });
