@@ -39,14 +39,16 @@ class BaseController {
 
   update(params) {
     this.beforeEach();
-    
+
     return new this.model(params)
       .save(params, {patch: true})
       .then((resource) => resource);
   }
 
-  delete(id) {
-    // knex delete
+  destroy(id) {
+    return new this.model({id: id})
+      .destroy()
+      .then((resource) => resource);
   }
 
   _checkInitialization() {

@@ -1,9 +1,9 @@
 const BaseController = require('./BaseController');
-const Level = require('../models/level');
+const User = require('../models/user');
 
-class LevelsController extends BaseController {
+class UsersController extends BaseController {
   constructor() {
-    super('levels', Level);
+    super('users', User);
   }
 
   index() {
@@ -27,4 +27,4 @@ class LevelsController extends BaseController {
   }
 }
 
-module.exports = LevelsController;
+module.exports = UsersController;

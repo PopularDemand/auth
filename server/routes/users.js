@@ -2,16 +2,19 @@ const router = require('express').Router();
 const knex = require('../../db/knex');
 const moment = require('moment');
 
+const UsersController = require('../controllers/UsersController');
+const controller = new UsersController();
+
 router.use((req, res, next) => {
   console.log(`Users: ${moment()}`);
   next();
 });
 
 router.get('/', (req, res) => {
-  knex.select().from('users')
-    .then((users) => {
-      res.send(users);
-    });
+  controller.index()
+    .then((resources) => {
+      res.send(resources)
+    })
 });
 
 router.get('/:id', (req, res) => {

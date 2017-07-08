@@ -43,7 +43,7 @@ router.put('/:id', (req, res) => {
     req.body,
     {updated_at: moment()}
   );
-  
+
   controller.update(levelParams)
     .then((level) => {
       res.send(level);
@@ -51,10 +51,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  knex('levels')
-    .where('id', req.params.id)
-    .del()
-    .returning(['id', 'name'])
+  controller.destroy(req.params.id)
     .then((level) => {
       res.send(level);
     });

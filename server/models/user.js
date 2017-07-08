@@ -10,6 +10,8 @@ const User = DB.model('User', {
   },
   level: () => this.belongsTo('Level')
   },
+
+  
   // Class methods
   {
   byEmail: (email) => {
